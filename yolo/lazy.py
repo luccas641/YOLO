@@ -31,13 +31,19 @@ def main(cfg: Config):
     )
 
     if cfg.task.task == "train":
-        model = TrainModel(cfg)
+        if cfg.weight!=True and 'ckpt' in cfg.weight:
+            model = TrainModel.load_from_checkpoint(cfg.weight, cfg=cfg)
+        else:
+            model = TrainModel(cfg)
         trainer.fit(model)
     if cfg.task.task == "validation":
         model = ValidateModel(cfg)
         trainer.validate(model)
     if cfg.task.task == "inference":
-        model = InferenceModel(cfg)
+        if cfg.weight!=True and 'ckpt' in cfg.weight:
+            model = InferenceModel.load_from_checkpoint(cfg.weight, cfg=cfg)
+        else:
+            model = InferenceModel(cfg)
         trainer.predict(model)
 
 
